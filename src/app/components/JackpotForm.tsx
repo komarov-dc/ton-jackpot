@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useTonWallet, useTonConnectUI } from '@tonconnect/ui-react';
-import { Address, beginCell, toNano } from 'ton';
+import { Address, Cell, Slice, beginCell, toNano } from 'ton';
 
 const JackpotForm = () => {
   const [minimalBet, setMinimalBet] = useState(0.2);
@@ -24,10 +24,10 @@ const JackpotForm = () => {
     }
 
     // Send transaction request
-    sendTransaction();
+    sendCreateJackPot();
   };
 
-  const sendTransaction = async () => {
+  const sendCreateJackPot = async () => {
     try {
       // Calculate the duration in seconds based on the selected unit
       let durationInSeconds = jackpotDuration;
@@ -54,7 +54,7 @@ const JackpotForm = () => {
         messages: [
           {
             address: '0QCvUQLWQ93l-niyA8u3mggPdeyGPTlyRcbzczCEanYGR6Wj',
-            amount: (0.15 * 1e9).toString(), // 0.15 TON in nanoTONs
+            amount: toNano('0.15').toString(), // 0.15 TON in nanoTONs
             payload: message.toBoc().toString('base64') // serialized message
           }
         ]
@@ -72,6 +72,39 @@ const JackpotForm = () => {
   const handleStartJackpot = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Starting jackpot with contract address:", contractAddress, "and NFT address:", nftAddress);
+    sendNftToJackPot();
+  };
+
+  const sendNftToJackPot = async () => {
+    try {
+      const message = beginCell()
+        .storeUint(0x5fcc3d14, 32)
+        .storeUint(0, 64)
+        .storeAddress(Address.parse(contractAddress)) 
+        .storeAddress(Address.parse(wallet?.account.address!))
+        .storeMaybeRef(null)
+        .storeCoins(toNano('0.01'))
+        .storeSlice(Cell.EMPTY.beginParse())
+        .endCell();
+
+      const transaction = {
+        validUntil: Math.floor(Date.now() / 1000) + 60, // valid for 60 seconds
+        messages: [
+          {
+            address: nftAddress,
+            amount: toNano('0.1').toString(), // 0.15 TON in nanoTONs
+            payload: message.toBoc().toString('base64') // serialized message
+          }
+        ]
+      };
+
+      const result = await tonConnectUI.sendTransaction(transaction);
+      console.log('Transaction result:', result);
+      alert('Transaction sent successfully');
+    } catch (error) {
+      console.error('Failed to send transaction:', error);
+      alert('Failed to send transaction');
+    }
   };
 
   return (
@@ -165,8 +198,8 @@ const JackpotForm = () => {
               type="text" 
               id="contractAddress" 
               className="border border-gray-300 p-2 rounded" 
-              value={contractAddress} 
-              readOnly 
+              value={contractAddress}
+              onChange={(e) => setContractAddress(e.target.value)}  
             />
           </div>
           <div className="flex flex-col">
@@ -175,8 +208,8 @@ const JackpotForm = () => {
               type="text" 
               id="nftAddress" 
               className="border border-gray-300 p-2 rounded" 
-              value={nftAddress} 
-              readOnly 
+              value={nftAddress}  
+              onChange={(e) => setNftAddress(e.target.value)}  
             />
           </div>
           <button type="submit" className="mt-4 bg-gray-900 text-white px-4 py-2 rounded">

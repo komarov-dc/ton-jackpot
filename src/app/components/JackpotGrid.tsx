@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import JackpotCard from './JackpotCard';
 import { getJackPotContractAddresses, getJackpotInfo } from '../../services/tonClientService';
 
@@ -9,19 +9,15 @@ const JackpotGrid = () => {
   const [loadedCount, setLoadedCount] = useState<number>(0);
 
   const LOAD_STEP = 10;
-
-  useEffect(() => {
-    if (jackpots.length === 0) {
-      loadMoreJackpots();
-    }
-  }, []); // Only run on mount
+  const isFetching = useRef<boolean>(false); // Ref to track fetching state
 
   const loadMoreJackpots = async () => {
-    if (loading) return;
+    if (loading || isFetching.current) return; // Prevent multiple calls
     setLoading(true);
+    isFetching.current = true; // Set fetching state
 
     try {
-      const addresses = await getJackPotContractAddresses(LOAD_STEP, loadedCount > 0 ? lastTransactionLT : null);
+      const addresses = await getJackPotContractAddresses(LOAD_STEP, loadedCount > 0 ? loadedCount : null);
       const newJackpots = [];
 
       for (const address of addresses) {
@@ -34,10 +30,17 @@ const JackpotGrid = () => {
     } catch (error) {
       console.error('Error fetching jackpots:', error);
       setError('Error fetching jackpots');
+    } finally {
+      setLoading(false);
+      isFetching.current = false; // Reset fetching state
     }
-
-    setLoading(false);
   };
+
+  useEffect(() => {
+    if (jackpots.length === 0) {
+      loadMoreJackpots();
+    }
+  }, []); // Only run on mount
 
   if (error) {
     return <div>Error: {error}</div>;

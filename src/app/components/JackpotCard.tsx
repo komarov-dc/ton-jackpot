@@ -43,7 +43,7 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
       <p className="m-0 max-w-[30ch] text-sm opacity-70">Goal Price: {formatTON(jackpot.goalPrice)} TON</p>
       <p className="m-0 max-w-[30ch] text-sm opacity-70">Minimum Bet: {formatTON(jackpot.minBet)} TON</p>
       <p className="m-0 max-w-[30ch] text-sm opacity-70">NFT: {jackpot.nft ? jackpot.nft : 'N/A'}</p>
-      <p className="m-0 max-w-[30ch] text-sm opacity-70">Ends in: {+jackpot.deadline ? dayjs.duration(dayjs(+jackpot.deadline).diff(dayjs())).format('DD[D] HH[H] mm[M]') : 'JackPot isn\'t started'}</p>
+      <p className="m-0 max-w-[30ch] text-sm opacity-70">Ends at: {+jackpot.deadline ? dayjs(+jackpot.deadline).format('DD[D] HH[H] mm[M]') : 'JackPot isn\'t started'}</p>
 
       {showBetField && (
         <div className="mt-4">
