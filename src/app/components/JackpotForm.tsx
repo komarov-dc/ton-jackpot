@@ -1,6 +1,8 @@
 // src/components/JackpotForm.tsx
 
 import React, { useState } from 'react';
+import { useTonWallet, useTonConnectUI } from '@tonconnect/ui-react';
+import { Address, beginCell, toNano } from 'ton';
 
 const JackpotForm = () => {
   const [minimalBet, setMinimalBet] = useState(0.2);
@@ -10,20 +12,65 @@ const JackpotForm = () => {
   const [contractAddress, setContractAddress] = useState("");
   const [nftAddress, setNftAddress] = useState("");
 
-  const handleCreateJackpot = (e: React.FormEvent) => {
+  const wallet = useTonWallet();
+  const [tonConnectUI] = useTonConnectUI();
+
+  const handleCreateJackpot = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    // Simulate API call to fetch the contract address
-    setTimeout(() => {
-      const fetchedAddress = "0x1234567890abcdef1234567890abcdef12345678"; // Example contract address
-      setContractAddress(fetchedAddress);
-      setNftAddress("0xabcdef1234567890abcdef1234567890abcdef12"); // Example NFT address
-    }, 1000);
+    if (!wallet) {
+      alert('Please connect your wallet first');
+      return;
+    }
+
+    // Send transaction request
+    sendTransaction();
+  };
+
+  const sendTransaction = async () => {
+    try {
+      // Calculate the duration in seconds based on the selected unit
+      let durationInSeconds = jackpotDuration;
+      if (durationUnit === "minutes") {
+        durationInSeconds *= 60;
+      } else if (durationUnit === "hours") {
+        durationInSeconds *= 3600;
+      } else if (durationUnit === "days") {
+        durationInSeconds *= 86400;
+      }
+
+      // Build the message
+      const message = beginCell()
+        .storeUint(0x2d98c896, 32)
+        .storeUint(0, 64) // query_id
+        .storeAddress(null) // user_address (null)
+        .storeCoins(toNano(targetTotalBet.toString())) // goal_price
+        .storeCoins(toNano(minimalBet.toString())) // min_bet
+        .storeUint(durationInSeconds, 32) // duration
+        .endCell();
+
+      const transaction = {
+        validUntil: Math.floor(Date.now() / 1000) + 60, // valid for 60 seconds
+        messages: [
+          {
+            address: '0QCvUQLWQ93l-niyA8u3mggPdeyGPTlyRcbzczCEanYGR6Wj',
+            amount: (0.15 * 1e9).toString(), // 0.15 TON in nanoTONs
+            payload: message.toBoc().toString('base64') // serialized message
+          }
+        ]
+      };
+
+      const result = await tonConnectUI.sendTransaction(transaction);
+      console.log('Transaction result:', result);
+      alert('Transaction sent successfully');
+    } catch (error) {
+      console.error('Failed to send transaction:', error);
+      alert('Failed to send transaction');
+    }
   };
 
   const handleStartJackpot = (e: React.FormEvent) => {
     e.preventDefault();
-    // Implement the logic to start the jackpot
     console.log("Starting jackpot with contract address:", contractAddress, "and NFT address:", nftAddress);
   };
 

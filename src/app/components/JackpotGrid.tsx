@@ -1,32 +1,62 @@
 import React, { useEffect, useState } from 'react';
 import JackpotCard from './JackpotCard';
+import { getJackPotContractAddresses, getJackpotInfo } from '../../services/tonClientService';
 
 const JackpotGrid = () => {
-  const [jackpotCount, setJackpotCount] = useState<bigint | null>(null);
+  const [jackpots, setJackpots] = useState<any[]>([]);
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [loadedCount, setLoadedCount] = useState<number>(0);
+
+  const LOAD_STEP = 10;
 
   useEffect(() => {
-    const fetchJackpotCount = async () => {
-      try {
-        const response = await fetch('/api/jackpots/count');
-        const data = await response.json();
-        setJackpotCount(BigInt(data.count));
-      } catch (error) {
-        console.error('Error fetching jackpot count:', error);
+    if (jackpots.length === 0) {
+      loadMoreJackpots();
+    }
+  }, []); // Only run on mount
+
+  const loadMoreJackpots = async () => {
+    if (loading) return;
+    setLoading(true);
+
+    try {
+      const addresses = await getJackPotContractAddresses(LOAD_STEP, loadedCount > 0 ? lastTransactionLT : null);
+      const newJackpots = [];
+
+      for (const address of addresses) {
+        const jackpot = await getJackpotInfo(address);
+        newJackpots.push(jackpot);
       }
-    };
 
-    fetchJackpotCount();
-  }, []);
+      setJackpots(prev => [...prev, ...newJackpots]);
+      setLoadedCount(prev => prev + addresses.length);
+    } catch (error) {
+      console.error('Error fetching jackpots:', error);
+      setError('Error fetching jackpots');
+    }
 
-  if (jackpotCount === null) {
-    return <div>Loading...</div>;
+    setLoading(false);
+  };
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
-    <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 w-full">
-      {Array.from({ length: parseInt(jackpotCount.toString()) }).map((_, index) => (
-        <JackpotCard key={index} id={jackpotCount - (BigInt(index + 1))} />
-      ))}
+    <div className="w-full">
+      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        {jackpots.map((jackpot, index) => (
+          <JackpotCard key={index} jackpot={jackpot} />
+        ))}
+      </div>
+      <button
+        onClick={loadMoreJackpots}
+        disabled={loading}
+        className="mt-4 bg-gray-900 text-white px-4 py-2 rounded"
+      >
+        {loading ? 'Loading...' : 'Load more'}
+      </button>
     </div>
   );
 };
