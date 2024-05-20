@@ -18,7 +18,7 @@ const JackpotGrid = () => {
 
     try {
       const addresses = await getJackPotContractAddresses(LOAD_STEP, loadedCount > 0 ? loadedCount : null);
-      const newJackpots = [];
+      const newJackpots:any[] = [];
 
       for (const address of addresses) {
         const jackpot = await getJackpotInfo(address);
