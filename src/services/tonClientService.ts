@@ -42,10 +42,11 @@ export const getJackPotContractAddresses = async (limit: number = 10, beforeLT: 
     });
 
     const transactions = response.data.transactions;
+    
     const addresses = transactions
-        .filter(tx => tx.out_msgs.some(outMsg => outMsg.op_code === OP_CODE))
-        .map(tx => {
-            const outMsg = tx.out_msgs.find(outMsg => outMsg.op_code === OP_CODE);
+        .filter((tx: any) => tx.out_msgs.some((outMsg: any) => outMsg.op_code === OP_CODE))
+        .map((tx: any) => {
+            const outMsg = tx.out_msgs.find((outMsg: any) => outMsg.op_code === OP_CODE);
             return outMsg.destination.address;
         });
 
