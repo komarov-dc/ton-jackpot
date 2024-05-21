@@ -29,12 +29,12 @@ const fetchWithRetry = async (fetchFunction: () => Promise<any>, retries: number
     }
 };
 
-export const getJackPotContractAddresses = async (limit: number = 10, beforeLT: number | null = null) => {
+export const getJackPotContractAddresses = async (limit: number = 10) => {
     const url = new URL(`${TON_API_URL}/${encodeURIComponent(JACKPOT_MASTER_CA)}/transactions`);
     url.searchParams.append('limit', limit.toString());
     url.searchParams.append('sort_order', 'desc');
-    if (beforeLT) {
-        url.searchParams.append('before_lt', beforeLT.toString());
+    if (lastTransactionLT) {
+        url.searchParams.append('before_lt', lastTransactionLT.toString());
     }
 
     const response = await fetchWithRetry(async () => {

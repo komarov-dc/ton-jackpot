@@ -17,7 +17,7 @@ const JackpotGrid = () => {
     isFetching.current = true; // Set fetching state
 
     try {
-      const addresses = await getJackPotContractAddresses(LOAD_STEP, loadedCount > 0 ? loadedCount : null);
+      const addresses = await getJackPotContractAddresses(LOAD_STEP);
       const newJackpots:any[] = [];
 
       for (const address of addresses) {
