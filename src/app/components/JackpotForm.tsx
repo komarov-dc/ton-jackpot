@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useTonWallet, useTonConnectUI } from '@tonconnect/ui-react';
 import { Address, Cell, Slice, beginCell, toNano } from 'ton';
+import { JACKPOT_MASTER_CA } from '@/const';
 
 const JackpotForm = () => {
   const [minimalBet, setMinimalBet] = useState(0.2);
@@ -53,7 +54,7 @@ const JackpotForm = () => {
         validUntil: Math.floor(Date.now() / 1000) + 60, // valid for 60 seconds
         messages: [
           {
-            address: '0QCvUQLWQ93l-niyA8u3mggPdeyGPTlyRcbzczCEanYGR6Wj',
+            address: JACKPOT_MASTER_CA,
             amount: toNano('0.15').toString(), // 0.15 TON in nanoTONs
             payload: message.toBoc().toString('base64') // serialized message
           }

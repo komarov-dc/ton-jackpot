@@ -1,3 +1,4 @@
+/* globals.css */
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -29,5 +30,32 @@ body {
 @layer utilities {
   .text-balance {
     text-wrap: balance;
+  }
+  
+  .progress-bar {
+    width: 100%;
+    background-color: #e0e0e0;
+    border-radius: 1rem;
+    overflow: hidden;
+  }
+
+  .progress-bar__fill {
+    height: 100%;
+    background-color: #76c7c0;
+    transition: width 0.3s ease-in-out;
+  }
+
+  .jackpot-card {
+    width: 20rem; /* 320px */
+    height: 24rem; /* 384px */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+
+  .jackpot-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1rem;
   }
 }

@@ -22,7 +22,6 @@ export default function Home() {
         <JackpotGrid />
 
         {/* Load More Button */}
-        <button className="mt-8 bg-gray-900 text-white px-4 py-2 rounded">Load more</button>
       </div>
 
       {/* Form Section */}

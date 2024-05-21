@@ -1,4 +1,5 @@
 import { TonClient, Address } from 'ton';
+import { JACKPOT_MASTER_CA } from '@/const';
 import axios from 'axios';
 
 const client = new TonClient({
@@ -6,7 +7,6 @@ const client = new TonClient({
 });
 
 const TON_API_URL = 'https://testnet.tonapi.io/v2/blockchain/accounts';
-const ACCOUNT_ID = '0:af5102d643dde5fa78b203cbb79a080f75ec863d397245c6f37330846a760647';
 const OP_CODE = '0x2d98c896';
 
 let lastTransactionLT: number | null = null;
@@ -30,7 +30,7 @@ const fetchWithRetry = async (fetchFunction: () => Promise<any>, retries: number
 };
 
 export const getJackPotContractAddresses = async (limit: number = 10, beforeLT: number | null = null) => {
-    const url = new URL(`${TON_API_URL}/${encodeURIComponent(ACCOUNT_ID)}/transactions`);
+    const url = new URL(`${TON_API_URL}/${encodeURIComponent(JACKPOT_MASTER_CA)}/transactions`);
     url.searchParams.append('limit', limit.toString());
     url.searchParams.append('sort_order', 'desc');
     if (beforeLT) {
@@ -66,9 +66,13 @@ export const getJackpotInfo = async (address: string) => {
     });
 
     const jackpot = {
+        address: Address.parse(address).toString(),
         id: result.stack.readBigNumber().toString(),
+        isFinished: result.stack.readBoolean(),
         creator: result.stack.readAddressOpt()?.toString(),
-        goalPrice: result.stack.readNumber().toString(),
+        winner: result.stack.readAddressOpt()?.toString(),
+        goalPrice: result.stack.readBigNumber().toString(),
+        totalBets: result.stack.readBigNumber().toString(),
         minBet: result.stack.readBigNumber().toString(),
         nft: result.stack.readAddressOpt()?.toString(),
         deadline: result.stack.readBigNumber().toString(),
