@@ -10,7 +10,7 @@ interface TonConnectProviderProps {
 
 const TonConnectProvider = ({ children }: TonConnectProviderProps) => {
   return (
-    <TonConnectUIProvider manifestUrl="https://your-app-url.com/tonconnect-manifest.json">
+    <TonConnectUIProvider manifestUrl="https://raw.githubusercontent.com/kartafil/ton-jackpot/main/manifest.json">
       {children}
     </TonConnectUIProvider>
   );

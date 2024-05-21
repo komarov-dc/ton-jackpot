@@ -9,7 +9,7 @@ import Footer from '../components/Footer';
 
 const SearchResultsPage = () => {
   const searchParams = useSearchParams();
-  const query = searchParams.get("query");
+  const query = searchParams?.get("query");
   const [searchResults, setSearchResults] = useState<string[]>([]);
 
   useEffect(() => {
