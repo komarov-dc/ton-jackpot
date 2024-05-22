@@ -8,27 +8,19 @@ import Footer from './components/Footer';
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
+    <>
       <Header />
-      
-      <div className="z-10 w-full max-w-5xl flex flex-col items-center justify-between font-mono text-sm lg:flex lg:items-start">
-        {/* Search and Title */}
-        <div className="mt-16 w-full flex flex-col items-center lg:flex-row lg:justify-between">
-          <h2 className="text-2xl font-semibold mb-4 lg:mb-0">Current JackPots:</h2>
-          <Search />
+      <main className="flex min-h-screen flex-col items-center justify-between p-4 lg:p-24">
+        <div className="main-content z-10 w-full max-w-5xl flex flex-col items-center justify-between font-mono text-sm lg:flex lg:items-start">
+          <div className="mt-16 w-full flex flex-col items-center lg:flex-row lg:justify-between">
+            <h2 className="text-4xl text-emerald-500 font-semibold mb-4 lg:mb-0">NFT Lotteries:</h2>
+            <Search />
+          </div>
+          <JackpotGrid />
         </div>
-
-        {/* Grid */}
-        <JackpotGrid />
-
-        {/* Load More Button */}
-      </div>
-
-      {/* Form Section */}
-      <JackpotForm />
-
-      {/* Footer */}
-      <Footer />
-    </main>
+        <JackpotForm />
+      </main>
+        <Footer />
+    </>
   );
 }
