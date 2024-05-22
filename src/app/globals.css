@@ -18,7 +18,7 @@
 }
 
 body {
-  color: var(--foreground-rgb);
+  color: rgb(2 44 34);
   background: linear-gradient(
       to bottom,
       transparent,
@@ -31,7 +31,7 @@ body {
   .text-balance {
     text-wrap: balance;
   }
-  
+
   .progress-bar {
     width: 100%;
     background-color: #e0e0e0;
@@ -46,8 +46,6 @@ body {
   }
 
   .jackpot-card {
-    width: 20rem; /* 320px */
-    height: 24rem; /* 384px */
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -57,5 +55,17 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
     gap: 1rem;
+  }
+
+  .fixed-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    color: white;
+  }
+
+  .main-content {
+    margin-top: 4rem; /* Adjust based on the height of your header */
   }
 }

@@ -7,8 +7,10 @@ const client = new TonClient({
     endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
 });
 
-const TON_API_URL//= 'https://tonapi.io/v2/blockchain/accounts';
-                = 'https://testnet.tonapi.io/v2/blockchain/accounts';
+const TON_API_URL_ACCOUNTS//= 'https://tonapi.io/v2/blockchain/accounts';
+    = 'https://testnet.tonapi.io/v2/blockchain/accounts';
+const TON_API_URL_NFTS//= 'https://tonapi.io/v2/nfts';
+    = 'https://testnet.tonapi.io/v2/nfts';
 const OP_CODE = '0x2d98c896';
 
 let lastTransactionLT: number | null = null;
@@ -23,7 +25,7 @@ const fetchWithRetry = async (fetchFunction: () => Promise<any>, retries: number
             if (attempt < retries - 1 && error.response && error.response.status === 429) {
                 console.warn(`Rate limit exceeded. Retrying in ${delayTime}ms...`);
                 await delay(delayTime);
-                delayTime *= 2; // Exponential backoff
+                delayTime *= 2;
             } else {
                 throw error;
             }
@@ -32,7 +34,7 @@ const fetchWithRetry = async (fetchFunction: () => Promise<any>, retries: number
 };
 
 export const getJackPotContractAddresses = async (limit: number = 10) => {
-    const url = new URL(`${TON_API_URL}/${encodeURIComponent(JACKPOT_MASTER_CA)}/transactions`);
+    const url = new URL(`${TON_API_URL_ACCOUNTS}/${encodeURIComponent(JACKPOT_MASTER_CA)}/transactions`);
     url.searchParams.append('limit', limit.toString());
     url.searchParams.append('sort_order', 'desc');
     if (lastTransactionLT) {
@@ -44,7 +46,7 @@ export const getJackPotContractAddresses = async (limit: number = 10) => {
     });
 
     const transactions = response.data.transactions;
-    
+
     const addresses = transactions
         .filter((tx: any) => tx.out_msgs.some((outMsg: any) => outMsg.op_code === OP_CODE))
         .map((tx: any) => {
@@ -57,6 +59,16 @@ export const getJackPotContractAddresses = async (limit: number = 10) => {
     }
 
     return addresses;
+};
+
+export const getNftPreview = async (address: string) => {
+    const url = new URL(`${TON_API_URL_NFTS}/${encodeURIComponent(address)}`);
+    
+    const response = await fetchWithRetry(async () => {
+        return axios.get(url.toString());
+    });
+
+    return response.data.previews[response.data.previews.length - 1].url;
 };
 
 export const getJackpotInfo = async (address: string) => {
@@ -78,7 +90,9 @@ export const getJackpotInfo = async (address: string) => {
         minBet: result.stack.readBigNumber().toString(),
         nft: result.stack.readAddressOpt()?.toString(),
         deadline: result.stack.readBigNumber().toString(),
+        nft_preview: ''
     };
+
 
     return jackpot;
 };

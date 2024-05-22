@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import JackpotCard from './JackpotCard';
-import { getJackPotContractAddresses, getJackpotInfo } from '../../services/tonClientService';
+import { getJackPotContractAddresses, getJackpotInfo, getNftPreview } from '../../services/tonClientService';
 
 const JackpotGrid = () => {
   const [jackpots, setJackpots] = useState<any[]>([]);
@@ -18,14 +18,15 @@ const JackpotGrid = () => {
 
     try {
       const addresses = await getJackPotContractAddresses(LOAD_STEP);
-      const newJackpots:any[] = [];
 
       for (const address of addresses) {
         const jackpot = await getJackpotInfo(address);
-        newJackpots.push(jackpot);
+        if (jackpot.nft) {
+          jackpot.nft_preview = await getNftPreview(jackpot.nft);
+        }
+        setJackpots(prev => [...prev, jackpot]);
       }
 
-      setJackpots(prev => [...prev, ...newJackpots]);
       setLoadedCount(prev => prev + addresses.length);
     } catch (error) {
       console.error('Error fetching jackpots:', error);
@@ -56,7 +57,7 @@ const JackpotGrid = () => {
       <button
         onClick={loadMoreJackpots}
         disabled={loading}
-        className="mt-4 bg-gray-900 text-white px-4 py-2 rounded"
+        className="mt-4 bg-emerald-400 w-full text-white px-4 py-2 rounded"
       >
         {loading ? 'Loading...' : 'Load more'}
       </button>

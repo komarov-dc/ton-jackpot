@@ -4,8 +4,8 @@ import ConnectButton from './ConnectButton';
 
 const Header = () => {
   return (
-    <header className="fixed top-0 w-full bg-gray-900 text-white p-4 flex justify-between items-center">
-      <h1 className="text-2xl">TON JackPot</h1>
+    <header className="fixed-header bg-teal-400 text-white p-4 flex justify-between items-center">
+      <h1 className="text-2xl">Happy-Lottery ||:{'>'} TON</h1>
       <ConnectButton />
     </header>
   );
