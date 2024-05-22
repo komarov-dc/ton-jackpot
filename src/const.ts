@@ -1,4 +1,4 @@
 const JACKPOT_MASTER_CA //= '0:492487433f65b07bfa8645c41cdcc185f2294d3a93363b320ad2d915b96b09c1';
-                        = '0:d0e32e3ed8881acce1e732f69072e4912c8b002faedcfa275d9d254cc7a6f02c';
+                        = '0:016d4a2a542b41fe92e353d34ac2f57592f284a5301306b379a7783fecc72240';
 
 export { JACKPOT_MASTER_CA };
