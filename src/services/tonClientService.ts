@@ -3,10 +3,12 @@ import { JACKPOT_MASTER_CA } from '@/const';
 import axios from 'axios';
 
 const client = new TonClient({
+    //endpoint: 'https://toncenter.com/api/v2/jsonRPC',
     endpoint: 'https://testnet.toncenter.com/api/v2/jsonRPC',
 });
 
-const TON_API_URL = 'https://testnet.tonapi.io/v2/blockchain/accounts';
+const TON_API_URL//= 'https://tonapi.io/v2/blockchain/accounts';
+                = 'https://testnet.tonapi.io/v2/blockchain/accounts';
 const OP_CODE = '0x2d98c896';
 
 let lastTransactionLT: number | null = null;
