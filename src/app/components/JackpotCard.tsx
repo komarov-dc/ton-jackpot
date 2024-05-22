@@ -25,8 +25,13 @@ interface JackpotCardProps {
   };
 }
 
+const formatTON = (amount: string) => {
+  const result = Number(BigInt(amount)) / 1e9;
+  return result.toFixed(2);
+};
+
 const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
-  const [betAmount, setBetAmount] = useState('');
+  const [betAmount, setBetAmount] = useState(formatTON(jackpot.minBet.toString()));
 
   const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
@@ -54,11 +59,6 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
     const result = await tonConnectUI.sendTransaction(transaction);
   };
 
-  const formatTON = (amount: string) => {
-    const result = Number(BigInt(amount)) / 1e9;
-    return result.toFixed(2);
-  };
-
   const progressPercentage = (totalBets: string, goalPrice: string) => {
     const total = Number(BigInt(totalBets)) / 1e9;
     const goal = Number(BigInt(goalPrice)) / 1e9;
@@ -75,13 +75,13 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
       {jackpot.nft ? (
         <>
           <img src={jackpot.nft_preview} alt='nft_image' className='w-full mb-5'></img>
-          <a href={`https://testnet.tonviewer.com/${jackpot.address}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.address}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             CA: {shortenAddress(jackpot.address)}
           </a>
-          <a href={`https://testnet.tonviewer.com/${jackpot.nft}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.nft}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             NFT: {jackpot.nft ? shortenAddress(jackpot.nft) : 'N/A'}
           </a>
-          <a href={`https://testnet.tonviewer.com/${jackpot.creator}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.creator}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             Creator: {jackpot.creator ? shortenAddress(jackpot.creator) : 'N/A'}
           </a>
           <p className="m-0 max-w-[30ch] text-sm opacity-70">Goal: {formatTON(jackpot.goalPrice)} TON</p>
@@ -89,20 +89,20 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
           <p className="m-0 max-w-[30ch] text-sm opacity-70">Min. bet: {formatTON(jackpot.minBet)} TON</p>
           {
             jackpot.isFinished || dayjs.unix(parseInt(jackpot.deadline, 10)).isBefore(dayjs()) ?
-            (
-              <div className="ml-0 max-w-[30ch] text-sm opacity-70">FINISHED</div>
-            ) :
-            (
-              <p className="m-0 max-w-[30ch] text-sm opacity-70">Ends in: {dayjs.unix(parseInt(jackpot.deadline, 10)).fromNow(true)}</p>
-            )
+              (
+                <div className="ml-0 max-w-[30ch] text-sm opacity-70">FINISHED</div>
+              ) :
+              (
+                <p className="m-0 max-w-[30ch] text-sm opacity-70">Ends in: {dayjs.unix(parseInt(jackpot.deadline, 10)).fromNow(true)}</p>
+              )
           }
         </>
       ) : (
         <>
-          <a href={`https://testnet.tonviewer.com/${jackpot.address}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.address}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             CA: {shortenAddress(jackpot.address)}
           </a>
-          <a href={`https://testnet.tonviewer.com/${jackpot.creator}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.creator}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             Creator: {jackpot.creator ? shortenAddress(jackpot.creator) : 'N/A'}
           </a>
           <p className="m-0 max-w-[30ch] text-sm opacity-70">Goal Price: {formatTON(jackpot.goalPrice)} TON</p>
