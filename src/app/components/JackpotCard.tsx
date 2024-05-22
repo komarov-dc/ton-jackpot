@@ -75,13 +75,13 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
       {jackpot.nft ? (
         <>
           <img src={jackpot.nft_preview} alt='nft_image' className='w-full mb-5'></img>
-          <a href={`https://testnet.tonviewer.com/${jackpot.address}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.address}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             CA: {shortenAddress(jackpot.address)}
           </a>
-          <a href={`https://testnet.tonviewer.com/${jackpot.nft}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.nft}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             NFT: {jackpot.nft ? shortenAddress(jackpot.nft) : 'N/A'}
           </a>
-          <a href={`https://testnet.tonviewer.com/${jackpot.creator}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.creator}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             Creator: {jackpot.creator ? shortenAddress(jackpot.creator) : 'N/A'}
           </a>
           <p className="m-0 max-w-[30ch] text-sm opacity-70">Goal: {formatTON(jackpot.goalPrice)} TON</p>
@@ -99,10 +99,10 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
         </>
       ) : (
         <>
-          <a href={`https://testnet.tonviewer.com/${jackpot.address}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.address}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             CA: {shortenAddress(jackpot.address)}
           </a>
-          <a href={`https://testnet.tonviewer.com/${jackpot.creator}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
+          <a href={`https://tonviewer.com/${jackpot.creator}`} target="_blank" rel="noopener noreferrer" className="block mb-2 text-sm text-blue-500">
             Creator: {jackpot.creator ? shortenAddress(jackpot.creator) : 'N/A'}
           </a>
           <p className="m-0 max-w-[30ch] text-sm opacity-70">Goal Price: {formatTON(jackpot.goalPrice)} TON</p>
