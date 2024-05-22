@@ -7,7 +7,7 @@ const JackpotForm = () => {
   const [minimalBet, setMinimalBet] = useState(0.2);
   const [targetTotalBet, setTargetTotalBet] = useState(1);
   const [jackpotDuration, setJackpotDuration] = useState(60);
-  const [durationUnit, setDurationUnit] = useState("minutes");
+  const [durationUnit, setDurationUnit] = useState("hours");
   const [contractAddress, setContractAddress] = useState("");
   const [nftAddress, setNftAddress] = useState("");
 
@@ -28,9 +28,7 @@ const JackpotForm = () => {
   const sendCreateJackPot = async () => {
     try {
       let durationInSeconds = jackpotDuration;
-      if (durationUnit === "minutes") {
-        durationInSeconds *= 60;
-      } else if (durationUnit === "hours") {
+      if (durationUnit === "hours") {
         durationInSeconds *= 3600;
       } else if (durationUnit === "days") {
         durationInSeconds *= 86400;
@@ -141,19 +139,9 @@ const JackpotForm = () => {
               className="border border-gray-300 p-2 rounded"
               value={jackpotDuration}
               onChange={(e) => setJackpotDuration(Number(e.target.value))}
-              min="60"
+              min={durationUnit === "hours" ? 4 : 1} max={durationUnit === "hours" ? 168 : 7}
             />
             <div className="flex items-center mt-2 space-x-4">
-              <label>
-                <input
-                  type="radio"
-                  name="durationUnit"
-                  value="minutes"
-                  checked={durationUnit === "minutes"}
-                  onChange={(e) => setDurationUnit(e.target.value)}
-                />
-                Minutes
-              </label>
               <label>
                 <input
                   type="radio"
