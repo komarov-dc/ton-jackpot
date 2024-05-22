@@ -69,7 +69,7 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
 
   return (
     <div
-      className="group rounded-lg place-self-center border border-transparent p-5 transition-colors hover:border-gray-300 hover:bg-gray-100 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/30 cursor-pointer w-80"
+      className="group rounded-lg place-self-start border border-transparent p-5 transition-colors hover:border-gray-300 hover:bg-gray-100 dark:hover:border-neutral-700 dark:hover:bg-neutral-800/30 cursor-pointer w-80"
     >
       <h3 className="mb-3 text-xl text-teal-800 font-semibold">Lottery #{jackpot.id}</h3>
       {jackpot.nft ? (
