@@ -25,8 +25,13 @@ interface JackpotCardProps {
   };
 }
 
+const formatTON = (amount: string) => {
+  const result = Number(BigInt(amount)) / 1e9;
+  return result.toFixed(2);
+};
+
 const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
-  const [betAmount, setBetAmount] = useState('');
+  const [betAmount, setBetAmount] = useState(formatTON(jackpot.minBet.toString()));
 
   const wallet = useTonWallet();
   const [tonConnectUI] = useTonConnectUI();
@@ -52,11 +57,6 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
       ]
     };
     const result = await tonConnectUI.sendTransaction(transaction);
-  };
-
-  const formatTON = (amount: string) => {
-    const result = Number(BigInt(amount)) / 1e9;
-    return result.toFixed(2);
   };
 
   const progressPercentage = (totalBets: string, goalPrice: string) => {
@@ -89,12 +89,12 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
           <p className="m-0 max-w-[30ch] text-sm opacity-70">Min. bet: {formatTON(jackpot.minBet)} TON</p>
           {
             jackpot.isFinished || dayjs.unix(parseInt(jackpot.deadline, 10)).isBefore(dayjs()) ?
-            (
-              <div className="ml-0 max-w-[30ch] text-sm opacity-70">FINISHED</div>
-            ) :
-            (
-              <p className="m-0 max-w-[30ch] text-sm opacity-70">Ends in: {dayjs.unix(parseInt(jackpot.deadline, 10)).fromNow(true)}</p>
-            )
+              (
+                <div className="ml-0 max-w-[30ch] text-sm opacity-70">FINISHED</div>
+              ) :
+              (
+                <p className="m-0 max-w-[30ch] text-sm opacity-70">Ends in: {dayjs.unix(parseInt(jackpot.deadline, 10)).fromNow(true)}</p>
+              )
           }
         </>
       ) : (
