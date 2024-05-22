@@ -65,13 +65,7 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
     return total >= goal ? 100 : (total / goal) * 100;
   };
 
-  const calculateTimeLeft = (deadline: string) => {
-    const deadlineDate = dayjs.unix(parseInt(deadline, 10));
-    const now = dayjs();
-    return deadlineDate.isAfter(now) ? deadlineDate.fromNow(true) : 'finished';
-  };
-
-  const progressBarColor = jackpot.isFinished ? 'bg-green-600' : 'bg-blue-600';
+  const progressBarColor = jackpot.isFinished ? 'bg-emerald-700' : 'bg-cyan-600';
 
   return (
     <div
@@ -94,12 +88,12 @@ const JackpotCard: React.FC<JackpotCardProps> = ({ jackpot }) => {
           <p className="m-0 max-w-[30ch] text-sm opacity-70">Total bets: {formatTON(jackpot.totalBets)} TON</p>
           <p className="m-0 max-w-[30ch] text-sm opacity-70">Min. bet: {formatTON(jackpot.minBet)} TON</p>
           {
-            jackpot.isFinished || dayjs.unix(parseInt(jackpot.deadline, 10)).isAfter(dayjs()) ?
+            jackpot.isFinished || dayjs.unix(parseInt(jackpot.deadline, 10)).isBefore(dayjs()) ?
             (
               <div className="ml-0 max-w-[30ch] text-sm opacity-70">FINISHED</div>
             ) :
             (
-              <p className="m-0 max-w-[30ch] text-sm opacity-70">Ends in: {calculateTimeLeft(jackpot.deadline)}</p>
+              <p className="m-0 max-w-[30ch] text-sm opacity-70">Ends in: {dayjs.unix(parseInt(jackpot.deadline, 10)).fromNow(true)}</p>
             )
           }
         </>

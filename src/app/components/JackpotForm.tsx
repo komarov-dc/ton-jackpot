@@ -6,7 +6,7 @@ import { JACKPOT_MASTER_CA } from '@/const';
 const JackpotForm = () => {
   const [minimalBet, setMinimalBet] = useState(0.2);
   const [targetTotalBet, setTargetTotalBet] = useState(1);
-  const [jackpotDuration, setJackpotDuration] = useState(60);
+  const [jackpotDuration, setJackpotDuration] = useState(4);
   const [durationUnit, setDurationUnit] = useState("hours");
   const [contractAddress, setContractAddress] = useState("");
   const [nftAddress, setNftAddress] = useState("");
@@ -93,7 +93,7 @@ const JackpotForm = () => {
       };
 
       const result = await tonConnectUI.sendTransaction(transaction);
-      console.log('Transaction result:', result);
+      console.log('Transaction result:', JSON.stringify(result, null, 4));
       alert('Transaction sent successfully');
     } catch (error) {
       console.error('Failed to send transaction:', error);
